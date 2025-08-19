@@ -125,7 +125,7 @@ void print_fib_info(mpz_t A, unsigned long N, int SAVE)
         char *LAST_DIGITS = mpz_get_str(NULL, 10, TEMP);
         
         printf("First ~50 digits: %s\n", FIRST_DIGITS);
-        printf("Last 50 digits:   %050s\n", LAST_DIGITS);
+        printf("Last 50 digits:   %50s\n", LAST_DIGITS);
         
         free(FIRST_DIGITS);
         free(LAST_DIGITS);
@@ -273,9 +273,9 @@ int main(int argc, char *argv[])
 
     size_t NUM_DIGITS = mpz_sizeinbase(FIB_N, 10);
     printf("\nPerformance summary:\n");
-    printf("  Computation: %.6f seconds (%.0f digits/second)\n", ELAPSED, NUM_DIGITS / ELAPSED);
+        printf("  Computation: %.6f seconds (%.0f digits/second)\n", ELAPSED, NUM_DIGITS / ELAPSED);
     if (PRINT_ELAPSED > 0.001)
-        printf("  Display/I/O: %.6f seconds\n", PRINT_ELAPSED);
+        printf("  System(I/O): %.6f seconds\n", PRINT_ELAPSED);
 
 
     EXIT:
