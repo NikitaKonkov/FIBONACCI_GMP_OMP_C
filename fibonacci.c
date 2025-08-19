@@ -25,7 +25,7 @@ Simple Compile:
     Note: OpenMP (-fopenmp) is optional. Without it, runs single-threaded.
 
 Info:
-    This code is so portable and efficient, it'll run your smartfridge.
+    This code is so portable and efficient, it'll run on your smartfridge.
 */
 
 #ifdef _OPENMP
