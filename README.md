@@ -1,4 +1,4 @@
-# Fibonacci_GMP_BIGINT
+# FIBONACCI_GMP_OMP_C
 
 >A blazing-fast, accurate Fibonacci number calculator using the GMP (GNU Multiple Precision Arithmetic) library for arbitrary-precision integer math with optional OpenMP parallelization*.
 
