@@ -1,0 +1,8 @@
+# Executables
+*.exe
+*.out
+*.o
+*.obj
+
+# Generated files
+Fibonacci_*.txt
