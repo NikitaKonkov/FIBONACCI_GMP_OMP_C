@@ -18,10 +18,10 @@ Usage:
 
 Compile:
     windows:
-        gcc -O3 -march=native -fopenmp -o fib.exe fibonacci.c -lgmp
+        gcc -O3 -march=native -mtune=native -fopenmp -flto -ffast-math -o fib.exe fibonacci.c -lgmp
     linux:
-        gcc -O3 -march=native -fopenmp -o fib fibonacci.c -lgmp
-    
+        gcc -O3 -march=native -mtune=native -fopenmp -flto -ffast-math -o fib fibonacci.c -lgmp
+
     Note: OpenMP (-fopenmp) is optional. Without it, runs single-threaded.
 
 Info:
@@ -39,6 +39,8 @@ Info:
 #include <gmp.h>
 
 int RETURN_FLAG = 0;
+
+
 
 // F(2k) = F(k) * (2*F(k+1) - F(k))
 // F(2k+1) = F(k+1)^2 + F(k)^2
@@ -64,8 +66,8 @@ void fast_fib_calc(unsigned long N, mpz_t A, mpz_t B)
     fast_fib_calc(N / 2, F0, F1); 
 
 
-    // Independent calculations when (N >= 100000000) res ~0.4 seconds
-    #pragma omp parallel sections if (N >= 100000000)
+    // Independent calculations when (N >= 50000000) res ~0.4 seconds
+    #pragma omp parallel sections if (N >= 50000000)
     {
         #pragma omp section
         {
@@ -100,6 +102,8 @@ void fast_fib_calc(unsigned long N, mpz_t A, mpz_t B)
     mpz_clear(TEMP);
     mpz_clear(F0_Q);
 }
+
+
 
 // Print Fibonacci number
 void print_fib_info(mpz_t A, unsigned long N, int SAVE)
@@ -182,6 +186,8 @@ void print_fib_info(mpz_t A, unsigned long N, int SAVE)
     }
 }
 
+
+
 void print_usage(const char *PROGRAM_NAME)
 {
     printf("Usage: %s [-s] [-h] [N]\n", PROGRAM_NAME);
@@ -194,6 +200,8 @@ void print_usage(const char *PROGRAM_NAME)
     printf("  %s -s 1000000  # Compute F(1000000), save to file\n", PROGRAM_NAME);
     printf("  %s 100         # Compute F(100), don't save\n", PROGRAM_NAME);
 }
+
+
 
 int main(int argc, char *argv[])
 {

@@ -21,10 +21,10 @@
 # Compile the program (ensure GMP is installed)
 
 windows:
-    gcc -O3 -march=native -fopenmp -o fib.exe fibonacci.c -lgmp
-
+   gcc -O3 -march=native -mtune=native -fopenmp -flto -ffast-math -o fib.exe fibonacci.c -lgmp
+   
 linux:
-    gcc -O3 -march=native -fopenmp -o fib fibonacci.c -lgmp
+   gcc -O3 -march=native -mtune=native -fopenmp -flto -ffast-math -o fib fibonacci.c -lgmp
 
 # Note: -fopenmp is optional for parallelization. Without it, runs single-threaded.
 ```
