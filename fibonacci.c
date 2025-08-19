@@ -16,11 +16,11 @@ Usage:
 - -h: Show help message
 - N: Fibonacci number to compute (default: 20000000)
 
-Compile:
+Simple Compile:
     windows:
-        gcc -O3 -march=native -mtune=native -fopenmp -flto -ffast-math -o fib.exe fibonacci.c -lgmp
+        gcc -O3 -march=native -mtune=native -fopenmp -o fib.exe fibonacci.c -lgmp
     linux:
-        gcc -O3 -march=native -mtune=native -fopenmp -flto -ffast-math -o fib fibonacci.c -lgmp
+        gcc -O3 -march=native -mtune=native -fopenmp -o fib fibonacci.c -lgmp
 
     Note: OpenMP (-fopenmp) is optional. Without it, runs single-threaded.
 
@@ -66,8 +66,8 @@ void fast_fib_calc(unsigned long N, mpz_t A, mpz_t B)
     fast_fib_calc(N / 2, F0, F1); 
 
 
-    // Independent calculations when (N >= 50000000) res ~0.4 seconds
-    #pragma omp parallel sections if (N >= 50000000)
+    // Independent calculations when (N >= 100000) res ~0.4 seconds
+    #pragma omp parallel sections if (N >= 100000)
     {
         #pragma omp section
         {

@@ -18,15 +18,24 @@
 ## Build
 
 ```sh
-# Compile the program (ensure GMP is installed)
-
+# Simple build (reliable & fast):
 windows:
-   gcc -O3 -march=native -mtune=native -fopenmp -flto -ffast-math -o fib.exe fibonacci.c -lgmp
-   
+    gcc -O3 -march=native -mtune=native -fopenmp -o fib.exe fibonacci.c -lgmp
 linux:
-   gcc -O3 -march=native -mtune=native -fopenmp -flto -ffast-math -o fib fibonacci.c -lgmp
+    gcc -O3 -march=native -mtune=native -fopenmp -o fib fibonacci.c -lgmp
+android:
+    pkg install gmp clang openmp
+    clang -O3 -march=native -mtune=native -fopenmp -o fib fibonacci.c -lgmp
 
-# Note: -fopenmp is optional for parallelization. Without it, runs single-threaded.
+# Maximum performance build (aggressive optimizations):
+windows:
+    gcc -O3 -march=native -mtune=native -mavx512f -fopenmp -flto -funroll-loops -finline-functions -fomit-frame-pointer -falign-functions=32 -falign-loops=32 -fprefetch-loop-arrays -fno-stack-protector -DNDEBUG -o fib.exe fibonacci.c -lgmp
+linux:
+    gcc -O3 -march=native -mtune=native -mavx512f -fopenmp -flto -funroll-loops -finline-functions -fomit-frame-pointer -falign-functions=32 -falign-loops=32 -fprefetch-loop-arrays -fno-stack-protector -DNDEBUG -o fib fibonacci.c -lgmp
+android:
+    clang -O3 -march=native -mtune=native -fopenmp -flto -funroll-loops -finline-functions -fomit-frame-pointer -falign-functions=32 -falign-loops=32 -fprefetch-loop-arrays -fno-stack-protector -DNDEBUG -o fib fibonacci.c -lgmp
+
+# Note: OpenMP (-fopenmp) is optional. Without it, runs single-threaded.
 ```
 
 ## Usage
@@ -79,7 +88,7 @@ The program uses a recursive "fast doubling" approach with OpenMP parallelizatio
                           │ F1 = F(N/2+1)               │
                           └─────────────────────────────┘
                                           ↓
-                    Apply Fast Doubling Formulas (Parallel if N >= 100M):
+                    Apply Fast Doubling Formulas (Parallel if N >= 100K):
                     ┌──────────────────────┬──────────────────────┐
                     │  #pragma omp section │  #pragma omp section │
                     │ ┌──────────────────┐ │ ┌──────────────────┐ │
@@ -96,12 +105,12 @@ The program uses a recursive "fast doubling" approach with OpenMP parallelizatio
                                    └─────────────┘
                                       ↙       ↘
                                  No ↙           ↘ Yes
-                            ┌─────────┐     ┌─────────────┐
-                            │ Keep:   │     │ mpz_swap(A,B)│
-                            │ A=F(2k) │     │ mpz_add(B,B,A)│
-                            │ B=F(2k+1)│     │ → A=F(N)    │
-                            └─────────┘     │   B=F(N+1)  │
-                                           └─────────────┘
+                            ┌──────────┐     ┌───────────────┐
+                            │ Keep:    │     │ mpz_swap(A,B) │
+                            │ A=F(2k)  │     │ mpz_add(B,B,A)│
+                            │ B=F(2k+1)│     │ → A=F(N)      │
+                            └──────────┘     │   B=F(N+1)    │
+                                             └───────────────┘
                                           ↓
                                Clear: F0, F1, TEMP, F0_Q
                                     return A, B
